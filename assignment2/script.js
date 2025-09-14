@@ -1,25 +1,33 @@
-// app.js -- ASCII Clock Radio with Tone.js
+// app.js -- Stylised Retro ASCII Car Radio with Tone.js
 (() => {
   const uiEl = document.getElementById("ascii-ui");
 
-  // Playback state
+  // === State ===
   let isPlaying = false;
   let isPaused = false;
   let isMuted = false;
   let isLooping = false;
   let volume = 50;
   let lastVolume = volume;
-  const trackName = "TRACK.MP3";
+  const trackName = "THE_LONG_TRACK_NAME_EXCEEDING_LIMIT";
 
-  // Playback position
   let playOffset = 0;
   let startAt = 0;
 
-  // EQ visualizer values
+  // Marquee scroll settings
+  let scrollIndex = 0;
+  let lastScrollTime = 0;
+  const SCROLL_SPEED_MS = 300;
+
+  // === EQ Bands ===
   const EQ_BANDS = 20;
   let eqValues = new Array(EQ_BANDS).fill(0);
 
-  // Tone.js setup
+  // Fake station dial position (for decoration)
+  let dialPos = 8;
+  let dialDir = 1;
+
+  // === Tone.js Setup ===
   const player = new Tone.Player({
     url: "audio/track.mp3",
     autostart: false,
@@ -33,19 +41,16 @@
 
   player.chain(lowShelf, highShelf, masterVol, analyser, Tone.Destination);
 
-  // reset when track finishes
   player.onstop = () => {
     if (!isPaused) {
       isPlaying = false;
       playOffset = 0;
       render();
-      if (isLooping) {
-        play(); // auto-replay if looping
-      }
+      if (isLooping) play();
     }
   };
 
-  // helpers
+  // === Helpers ===
   function gainToDb(g) {
     if (g <= 0) return -100;
     return 20 * Math.log10(g);
@@ -96,11 +101,11 @@
     if (isMuted || volume === 0) {
       masterVol.volume.rampTo(-100, ramp);
     } else {
-      const g = volume / 100;
-      masterVol.volume.rampTo(gainToDb(g), ramp);
+      masterVol.volume.rampTo(gainToDb(volume / 100), ramp);
     }
   }
 
+  // === Controls ===
   function toggleMute() {
     if (!isMuted) {
       lastVolume = volume;
@@ -122,9 +127,7 @@
 
   async function ensureLoaded() {
     if (player.buffer) return;
-    return new Promise((resolve) => {
-      player.onload = resolve;
-    });
+    return new Promise((resolve) => (player.onload = resolve));
   }
 
   async function play() {
@@ -185,7 +188,7 @@
     render();
   }
 
-  // EQ update
+  // === EQ ===
   function updateEQ() {
     const vals = analyser.getValue();
     if (!vals || vals.length === 0) {
@@ -217,6 +220,7 @@
     return eqValues.map(asciiFromLevel).join(" ");
   }
 
+  // === Rendering ===
   function render() {
     const now = new Date();
     const { mood, pitch } = getMoodSettings();
@@ -232,33 +236,55 @@
       "-".repeat(10 - Math.round(volume / 10));
     const eq = getAsciiEQ();
 
+    // Animate station dial
+    dialPos += dialDir;
+    if (dialPos > 15 || dialPos < 5) dialDir *= -1;
+
+    const WIDTH = 52;
+    const line = (txt) => `║ ${txt.padEnd(WIDTH, " ")} ║\n`;
+
+    // marquee track name
+    const displayWidth = 30;
+    let trackDisplay = trackName;
+    if (trackName.length > displayWidth) {
+      const padded = trackName + "   " + trackName;
+      const nowTime = Date.now();
+      if (nowTime - lastScrollTime > SCROLL_SPEED_MS) {
+        scrollIndex = (scrollIndex + 1) % trackName.length;
+        lastScrollTime = nowTime;
+      }
+      trackDisplay = padded.substring(scrollIndex, scrollIndex + displayWidth);
+    }
+
+    // station dial
+    const dial =
+      "<|" + "=".repeat(dialPos) + "●" + "=".repeat(20 - dialPos) + "|>";
+
     let ui = "";
-    ui += "╔════════════════════════════════════════════════╗\n";
-    ui += "║                ASCII CAR RADIO                 ║\n";
-    ui += "╠════════════════════════════════════════════════╣\n";
-    ui += `║   TRACK: ${trackName.padEnd(37)} ║\n`;
-    ui += `║   STATUS: ${status.padEnd(36)} ║\n`;
-    ui += `║   TIME: ${timeStr.padEnd(39)}║\n`;
-    ui += `║   MOOD: ${mood.padEnd(39)}║\n`;
-    ui += "╠════════════════════════════════════════════════╣\n";
-    ui += `║   VOL [${volBar}] ${String(volume).padStart(3)}% ${
-      isMuted ? "MUTE" : ""
-    }                       ║\n`;
-    ui += `║   PITCH: ${pitch.padEnd(36)}  ║\n`;
-    ui += "╠════════════════════════════════════════════════╣\n";
-    ui += "║  [ PLAY ] [ STOP ] [ PAUSE ] [ MUTE ] [ LOOP ] ║\n";
-    ui += "║    ( P )    ( S )    ( SPC )   ( M )   ( L )   ║\n";
-    ui += "╠════════════════════════════════════════════════╣\n";
-    ui += `║   EQ: ${eq.padEnd(41)}║\n`;
-    ui += "╠════════════════════════════════════════════════╣\n";
-    ui +=
-      `║   MODE: ${isLooping ? "CASSETTE LOOP" : "FM BAND"}`.padEnd(49) + "║\n";
-    ui += "╚════════════════════════════════════════════════╝\n";
+    ui += "╔" + "═".repeat(WIDTH + 2) + "╗\n";
+    ui += line("📻  ASCII CAR RADIO v6           SIGNAL: ~~~");
+    ui += "╠" + "═".repeat(WIDTH + 2) + "╣\n";
+    ui += line(`░ TRACK: ${trackDisplay}`);
+    ui += line(`░ STATUS: ${status}`);
+    ui += line(`░ TIME: ${timeStr}`);
+    ui += line(`░ MOOD: ${mood}`);
+    ui += "╠" + "═".repeat(WIDTH + 2) + "╣\n";
+    ui += line(
+      `[VOL◉] [TUNE◯]   VOL [${volBar}] ${String(volume).padStart(3)}% ${
+        isMuted ? "MUTE" : ""
+      }`
+    );
+    ui += line("[ PLAY ] [ STOP ] [ PAUSE ] [ MUTE ] [ LOOP ]");
+    ui += "╠" + "═".repeat(WIDTH + 2) + "╣\n";
+    ui += line(`EQ: ${eq}`);
+    ui += "╠" + "═".repeat(WIDTH + 2) + "╣\n";
+    ui += line(`STATION DIAL: ${dial}`);
+    ui += "╚" + "═".repeat(WIDTH + 2) + "╝\n";
 
     uiEl.textContent = ui;
   }
 
-  // Controls via keys
+  // === Controls ===
   window.addEventListener("keydown", (e) => {
     if (e.key === " ") {
       e.preventDefault();
@@ -272,7 +298,6 @@
     if (e.key.toLowerCase() === "l") toggleLoop();
   });
 
-  // Controls via clicks
   uiEl.addEventListener("click", (e) => {
     const lines = (uiEl.textContent || "").split("\n");
     const ctrlLine = lines.find((l) => l.includes("[ PLAY ]"));
@@ -289,15 +314,15 @@
     };
 
     if (lines[y] === ctrlLine) {
-      check("[ PLAY ]", () => play());
-      check("[ STOP ]", () => stop());
-      check("[ PAUSE ]", () => pause());
-      check("[ MUTE ]", () => toggleMute());
-      check("[ LOOP ]", () => toggleLoop());
+      check("[ PLAY ]", play);
+      check("[ STOP ]", stop);
+      check("[ PAUSE ]", pause);
+      check("[ MUTE ]", toggleMute);
+      check("[ LOOP ]", toggleLoop);
     }
   });
 
-  // Main loop
+  // === Loop ===
   function loop() {
     updateEQ();
     render();
@@ -305,7 +330,7 @@
     requestAnimationFrame(loop);
   }
 
-  // Init
+  // === Init ===
   updateMasterVolume(0);
   render();
   loop();
