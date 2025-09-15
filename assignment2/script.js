@@ -1,8 +1,7 @@
-// script.js -- ASCII Car Radio with scrolling track name + EQ
 (() => {
   const uiEl = document.getElementById("ascii-ui");
 
-  // === State ===
+  //  State
   let isPlaying = false;
   let isPaused = false;
   let isMuted = false;
@@ -14,19 +13,19 @@
   let playOffset = 0;
   let startAt = 0;
 
-  // Marquee scroll settings
+  // Scroll settings
   let scrollIndex = 0;
   let lastScrollTime = 0;
-  const SCROLL_SPEED_MS = 300; // move every 300ms
+  const SCROLL_SPEED_MS = 300;
   const DISPLAY_WIDTH = 30;
 
   // EQ bands
   const EQ_BANDS = 20;
   let eqValues = new Array(EQ_BANDS).fill(0);
 
-  // === Tone.js setup ===
+  // Tone.js Setup
   const player = new Tone.Player({
-    url: "audio/ambient-instrumental-01.mp3", // ✅ corrected filename
+    url: "audio/ambient-instrumental-01.mp3",
     autostart: false,
     loop: false,
   });
@@ -34,7 +33,7 @@
   const lowShelf = new Tone.Filter(200, "lowshelf");
   const highShelf = new Tone.Filter(3000, "highshelf");
   const masterVol = new Tone.Volume(0);
-  const analyser = new Tone.Analyser("waveform", 256); // ✅ fixed EQ source
+  const analyser = new Tone.Analyser("waveform", 256);
 
   player.chain(lowShelf, highShelf, masterVol, analyser, Tone.Destination);
 
@@ -47,7 +46,7 @@
     }
   };
 
-  // === Helpers ===
+  // Helpers
   function gainToDb(g) {
     if (g <= 0) return -100;
     return 20 * Math.log10(g);
@@ -102,7 +101,7 @@
     }
   }
 
-  // === Controls ===
+  // Controls
   function toggleMute() {
     if (!isMuted) {
       lastVolume = volume;
@@ -185,7 +184,7 @@
     render();
   }
 
-  // === EQ ===
+  // EQ
   function updateEQ() {
     const vals = analyser.getValue();
     if (!vals || vals.length === 0) {
@@ -217,7 +216,7 @@
     return eqValues.map(asciiFromLevel).join(" ");
   }
 
-  // === Rendering ===
+  // Rendering
   function render() {
     const now = new Date();
     const { mood } = getMoodSettings();
@@ -236,7 +235,7 @@
     const WIDTH = 48;
     const line = (txt) => `║ ${txt.padEnd(WIDTH, " ")} ║\n`;
 
-    // === Marquee track name ===
+    // Marquee track name
     let trackDisplay = trackName;
     if (trackName.length > DISPLAY_WIDTH) {
       const padded = trackName + "   " + trackName;
@@ -250,29 +249,23 @@
 
     let ui = "";
     ui += "╔" + "═".repeat(WIDTH + 2) + "╗\n";
-    ui += line("📻  ASCII CAR RADIO v6           SIGNAL: ~~~");
-    ui += "╠" + "═".repeat(WIDTH + 2) + "╣\n";
-    ui += line(`░ TRACK: ${trackDisplay}`);
-    ui += line(`░ STATUS: ${status}`);
-    ui += line(`░ TIME: ${timeStr}`);
-    ui += line(`░ MOOD: ${mood}`);
+    ui += line(`TRACK: ${trackDisplay}`);
+    ui += line(`STATUS: ${status}`);
+    ui += line(`TIME: ${timeStr}`);
+    ui += line(`MOOD: ${mood}`);
     ui += "╠" + "═".repeat(WIDTH + 2) + "╣\n";
     ui += line(
-      `[VOL◉] [TUNE◯]   VOL [${volBar}] ${String(volume).padStart(3)}% ${
-        isMuted ? "MUTE" : ""
-      }`
+      `VOL [${volBar}] ${String(volume).padStart(3)}% ${isMuted ? "MUTE" : ""}`
     );
     ui += line("[ PLAY ] [ STOP ] [ PAUSE ] [ MUTE ] [ LOOP ]");
     ui += "╠" + "═".repeat(WIDTH + 2) + "╣\n";
     ui += line(`EQ: ${eq}`);
-    ui += "╠" + "═".repeat(WIDTH + 2) + "╣\n";
-    ui += line(`STATION DIAL: ${dial}`);
     ui += "╚" + "═".repeat(WIDTH + 2) + "╝\n";
 
     uiEl.textContent = ui;
   }
 
-  // === Controls ===
+  // Controls
   window.addEventListener("keydown", (e) => {
     if (e.key === " ") {
       e.preventDefault();
@@ -310,7 +303,7 @@
     }
   });
 
-  // === Loop ===
+  // Loop
   function loop() {
     updateEQ();
     render();
@@ -318,7 +311,7 @@
     requestAnimationFrame(loop);
   }
 
-  // === Init ===
+  // Init
   updateMasterVolume(0);
   render();
   loop();

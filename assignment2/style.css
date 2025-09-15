@@ -1,8 +1,7 @@
 body {
   background: #000;
-  color: #0f0;
+  color: rgb(255, 89, 0);
   font-family: monospace;
-  font-size: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,11 +10,17 @@ body {
 }
 
 pre {
-  background: #111;
-  border: 2px solid #0f0;
-  padding: 12px;
-  line-height: 1.2;
+  border: 2px solid rgb(255, 89, 0);
+  padding: 10px;
   user-select: none;
+  line-height: 1.2;
+}
+
+.button {
   cursor: pointer;
-  box-shadow: 0 0 15px #0f0;
+}
+
+.highlight {
+  background: rgb(255, 89, 0);
+  color: #000;
 }
