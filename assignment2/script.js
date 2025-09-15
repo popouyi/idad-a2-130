@@ -1,4 +1,4 @@
-// app.js -- Stylised Retro ASCII Car Radio with Tone.js
+// script.js -- ASCII Car Radio with scrolling track name + EQ
 (() => {
   const uiEl = document.getElementById("ascii-ui");
 
@@ -9,7 +9,7 @@
   let isLooping = false;
   let volume = 50;
   let lastVolume = volume;
-  const trackName = "THE_LONG_TRACK_NAME_EXCEEDING_LIMIT";
+  const trackName = "Ambient Instrumental 01 - Mixed Version";
 
   let playOffset = 0;
   let startAt = 0;
@@ -17,19 +17,16 @@
   // Marquee scroll settings
   let scrollIndex = 0;
   let lastScrollTime = 0;
-  const SCROLL_SPEED_MS = 300;
+  const SCROLL_SPEED_MS = 300; // move every 300ms
+  const DISPLAY_WIDTH = 30;
 
-  // === EQ Bands ===
+  // EQ bands
   const EQ_BANDS = 20;
   let eqValues = new Array(EQ_BANDS).fill(0);
 
-  // Fake station dial position (for decoration)
-  let dialPos = 8;
-  let dialDir = 1;
-
-  // === Tone.js Setup ===
+  // === Tone.js setup ===
   const player = new Tone.Player({
-    url: "audio/track.mp3",
+    url: "audio/ambient-instrumental-01.mp3", // ✅ corrected filename
     autostart: false,
     loop: false,
   });
@@ -37,7 +34,7 @@
   const lowShelf = new Tone.Filter(200, "lowshelf");
   const highShelf = new Tone.Filter(3000, "highshelf");
   const masterVol = new Tone.Volume(0);
-  const analyser = new Tone.Analyser("fft", 128);
+  const analyser = new Tone.Analyser("waveform", 256); // ✅ fixed EQ source
 
   player.chain(lowShelf, highShelf, masterVol, analyser, Tone.Destination);
 
@@ -61,9 +58,9 @@
       return {
         mood: "Sunrise Energy",
         pitch: "Bright",
-        rate: 1.06,
-        lowGain: 3,
-        highGain: 3,
+        rate: 1.1,
+        lowGain: 4,
+        highGain: 4,
       };
     if (hour >= 12 && hour < 18)
       return {
@@ -77,14 +74,14 @@
       return {
         mood: "Sunset Warmth",
         pitch: "Warm",
-        rate: 0.98,
+        rate: 0.95,
         lowGain: 5,
-        highGain: -2,
+        highGain: -3,
       };
     return {
       mood: "Midnight Calm",
       pitch: "Low",
-      rate: 0.94,
+      rate: 0.9,
       lowGain: 6,
       highGain: -6,
     };
@@ -195,17 +192,17 @@
       eqValues.fill(0);
       return;
     }
-    const bins = vals.length;
-    const perBand = Math.floor(bins / EQ_BANDS) || 1;
+
+    const step = Math.floor(vals.length / EQ_BANDS);
     for (let b = 0; b < EQ_BANDS; b++) {
       let sum = 0;
-      const start = b * perBand;
-      const end = Math.min(start + perBand, bins);
-      for (let i = start; i < end; i++) sum += vals[i];
-      const avg = sum / Math.max(1, end - start);
-      const norm = Math.max(0, Math.min(1, (avg + 100) / 100));
+      for (let i = b * step; i < (b + 1) * step; i++) {
+        sum += Math.abs(vals[i]);
+      }
+      const avg = sum / step;
+      const norm = Math.min(1, avg * 5);
       const level = Math.round(norm * 3);
-      eqValues[b] = Math.max(level, Math.floor(eqValues[b] * 0.8));
+      eqValues[b] = Math.max(level, Math.floor(eqValues[b] * 0.7));
     }
   }
 
@@ -223,7 +220,7 @@
   // === Rendering ===
   function render() {
     const now = new Date();
-    const { mood, pitch } = getMoodSettings();
+    const { mood } = getMoodSettings();
     const timeStr = now.toLocaleTimeString("en-GB");
     const status =
       isPlaying && !isPaused
@@ -236,29 +233,20 @@
       "-".repeat(10 - Math.round(volume / 10));
     const eq = getAsciiEQ();
 
-    // Animate station dial
-    dialPos += dialDir;
-    if (dialPos > 15 || dialPos < 5) dialDir *= -1;
-
-    const WIDTH = 52;
+    const WIDTH = 48;
     const line = (txt) => `║ ${txt.padEnd(WIDTH, " ")} ║\n`;
 
-    // marquee track name
-    const displayWidth = 30;
+    // === Marquee track name ===
     let trackDisplay = trackName;
-    if (trackName.length > displayWidth) {
+    if (trackName.length > DISPLAY_WIDTH) {
       const padded = trackName + "   " + trackName;
       const nowTime = Date.now();
       if (nowTime - lastScrollTime > SCROLL_SPEED_MS) {
         scrollIndex = (scrollIndex + 1) % trackName.length;
         lastScrollTime = nowTime;
       }
-      trackDisplay = padded.substring(scrollIndex, scrollIndex + displayWidth);
+      trackDisplay = padded.substring(scrollIndex, scrollIndex + DISPLAY_WIDTH);
     }
-
-    // station dial
-    const dial =
-      "<|" + "=".repeat(dialPos) + "●" + "=".repeat(20 - dialPos) + "|>";
 
     let ui = "";
     ui += "╔" + "═".repeat(WIDTH + 2) + "╗\n";

@@ -2,6 +2,7 @@ body {
   background: #000;
   color: #0f0;
   font-family: monospace;
+  font-size: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,17 +11,11 @@ body {
 }
 
 pre {
+  background: #111;
   border: 2px solid #0f0;
-  padding: 10px;
-  user-select: none;
+  padding: 12px;
   line-height: 1.2;
-}
-
-.button {
+  user-select: none;
   cursor: pointer;
-}
-
-.highlight {
-  background: #0f0;
-  color: #000;
+  box-shadow: 0 0 15px #0f0;
 }
