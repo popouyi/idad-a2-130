@@ -1,0 +1,109 @@
+body {
+  background: #111;
+  color: #eee;
+  font-family: "Courier New", monospace;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+header,
+section {
+  padding: 2rem;
+  max-width: 900px;
+  margin: auto;
+}
+
+header {
+  background: #222;
+  border-bottom: 2px solid #555;
+  text-align: center;
+}
+
+h1,
+h2 {
+  color: #00ff99;
+}
+
+a {
+  color: #66ccff;
+}
+#visual-plan {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  align-items: flex-start;
+}
+#figure1 {
+  flex: 1;
+  background: #1a1a1a;
+  border: 1px solid #444;
+  padding: 1rem;
+  border-radius: 6px;
+}
+#sketch {
+  flex: 1;
+  min-width: 250px;
+}
+
+img {
+  max-width: 50%;
+  height: auto;
+  align-items: center;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 50%;
+  height: auto;
+}
+
+#figure2 {
+  flex: 1;
+  background: #1a1a1a;
+  border: 1px solid #444;
+  padding: 1rem;
+  border-radius: 6px;
+  align: center;
+  text-align: center;
+}
+
+#sketch-section {
+  flex: 1;
+  min-width: 250px;
+}
+footer {
+  background: #222;
+  color: #888;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  margin-top: 2rem;
+}
+
+.tech-block {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  align-items: flex-start;
+}
+
+.tech-text {
+  flex: 1;
+  min-width: 250px;
+}
+
+.tech-code {
+  flex: 1;
+  background: #1a1a1a;
+  border: 1px solid #444;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.tech-code pre {
+  margin: 0;
+  color: rgb(255, 255, 255);
+  font-family: "Courier New", monospace;
+  font-size: 0.9rem;
+}

@@ -2,8 +2,121 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <title>Assignment 2 Conceptual Response</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
-  <body></body>
+  <body>
+    <header>
+      <h1>Assignment 2 Project</h1>
+      <p>
+        A retro ASCII style audio player built entirely with text/ASCII
+        characters.
+      </p>
+      <p><a href="prototype.html" target="_blank">Live Prototype Link</a></p>
+    </header>
+
+    <section>
+      <h2>Conceptual Response</h2>
+      <p>
+        For this project, I created a web based audio player that follows an all
+        text character/skeumorphism theme. This prototype explores different
+        visual elements by using text characters to create a UI that mimics a
+        retro car radio. The audio player features different elements such as a
+        scrolling track displau, an EQ visualiser, and different buttons that
+        control the audio player. The prototype also adapts to the time of day
+        by changing the audio to match the different moods of the day.
+      </p>
+    </section>
+
+    <section>
+      <h2>Visual Plan / Sketch</h2>
+      <section id="visual-plan">
+        <section id="figure1">
+          <img src="Retro-car-radio.jpeg" alt="" />
+          <figcaption>Figure 1: Retro Car Radio Reference</figcaption>
+        </section>
+
+        <p id="sketch">
+          The project is inspired by the design of a retro car radio (Figure 1).
+          I had the idea of creating it after remembering my mom's old car that
+          had the exact same radio system, and i wanted to recreate that. The
+          design of the radio player fits the ASCII theme and i also planned on
+          implementing a mood changing feature that changes the audio based on
+          the time of day by utilising Date.now to change the pitch and filter
+          of the audio.
+          <a href="https://en.wikipedia.org/wiki/ASCII_art" target="_blank"
+            >Reference: ASCII Art</a
+          >
+        </p>
+      </section>
+      <section id="sketch-section">
+        <section id="figure2">
+          <img src="radio-sketch.jpg" alt="" />
+          <figcaption>Figure 2: Initial Sketch</figcaption>
+        </section>
+
+        <p id="sketch">
+          The design also includes a scrolling track display that mimics the LED
+          display of the car radio, an EQ visualiser that uses different text
+          characters to represent different levels, and buttons that control the
+          audio player such as play/pause, stop, loop, and mute. The overall
+          design is meant to be nostalgic and fun while also being functional.
+        </p>
+      </section>
+    </section>
+
+    <section>
+      <h2>Technical Approach</h2>
+
+      <h3>
+        <strong>UI Rendering</strong>
+      </h3>
+      <p>
+        The UI for this project isn’t built with standard HTML but is rendered
+        entirely using ASCII characters within a single
+        <code>&lt;pre&gt;</code> block. Using JavaScript instead of HTML allows
+        for more interactive features like live EQ visualization, scrolling
+        track names, and responsive playback controls. By updating the ASCII-art
+        interface as a single string, improves performance during updates, and
+        simplifies state management since all UI elements reflect the current
+        application state. It also naturally achieves the retro,
+        terminal-inspired aesthetic through monospaced text and box-drawing
+        characters rendered in a <code>&lt;pre&gt;</code> element.
+      </p>
+
+      <p>
+        Another feature I added is implementing Date.now to check the system’s
+        date and time to modify the audio. By checking the time, the audio
+        player modifies parameters like pitch and filters to reflect different
+        moods throughout the day—for instance, brighter tones in the morning and
+        warmer, softer sounds at night. This date-based logic not only creates a
+        context-aware and responsive listening experience but also adds
+        personalization and variety, making the project feel more interactive
+        while still fully contained within the ASCII-art interface.
+      </p>
+    </section>
+
+    <section>
+      <h2>Reflection (Week 8 Peer Testing)</h2>
+      <p>
+        <strong>Prompt 1:</strong> “Does the ASCII-only design feel intuitive to
+        navigate?”<br />
+        <strong>Feedback:</strong> Some peers found it nostalgic but noted that
+        clickable ASCII buttons can feel confusing without hover states.<br />
+        <strong>Response:</strong> I plan to add subtle color changes (still
+        ASCII, but styled) for active states and hover feedback.
+      </p>
+
+      <p>
+        <strong>Prompt 2:</strong> “How do the time-of-day moods affect your
+        experience?”<br />
+        <strong>Feedback:</strong> The adaptive playback effects were well
+        received, but some peers suggested exaggerating the EQ changes for
+        stronger feedback.<br />
+        <strong>Response:</strong> I will tune the filters more dramatically so
+        that “Midnight Calm” feels noticeably different from “Sunrise Energy.”
+      </p>
+    </section>
+  </body>
 </html>
