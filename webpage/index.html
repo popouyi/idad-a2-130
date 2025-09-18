@@ -30,7 +30,7 @@
     </section>
 
     <section>
-      <h2>Visual Plan / Sketch</h2>
+      <h3>Visual Plan / Sketch</h3>
       <section id="visual-plan">
         <section id="figure1">
           <img src="Retro-car-radio.jpeg" alt="" />
@@ -72,6 +72,12 @@
       <h3>
         <strong>UI Rendering</strong>
       </h3>
+
+      <img src="flow-diagram.jpg" alt="" />
+      <figcaption id="flow-diagramfig">
+        Figure 3: Flow Diagram of Application
+      </figcaption>
+
       <p>
         The UI for this project isn’t built with standard HTML but is rendered
         entirely using ASCII characters within a single
@@ -85,37 +91,47 @@
         characters rendered in a <code>&lt;pre&gt;</code> element.
       </p>
 
-      <p>
-        Another feature I added is implementing Date.now to check the system’s
-        date and time to modify the audio. By checking the time, the audio
-        player modifies parameters like pitch and filters to reflect different
-        moods throughout the day—for instance, brighter tones in the morning and
-        warmer, softer sounds at night. This date-based logic not only creates a
-        context-aware and responsive listening experience but also adds
-        personalization and variety, making the project feel more interactive
-        while still fully contained within the ASCII-art interface.
-      </p>
+      <h3>
+        <strong>Date.Now Implementation</strong>
+      </h3>
+
+      <div class="date-row">
+        <div class="date-text">
+          <p>
+            Another feature I added is implementing Date.now to check the
+            system’s date and time to modify the audio. By checking the time,
+            the audio player modifies parameters like pitch and filters to
+            reflect different moods throughout the day—for instance, brighter
+            tones in the morning and warmer, softer sounds at night. This
+            date-based logic not only creates a context-aware and responsive
+            listening experience but also adds personalization and variety,
+            making the project feel more interactive while still fully contained
+            within the ASCII-art interface.
+          </p>
+        </div>
+        <div class="date-img">
+          <img src="code1.png" alt="" />
+          <figcaption id="code1fig">Figure 4: Date.now Example</figcaption>
+        </div>
+      </div>
     </section>
 
     <section>
       <h2>Reflection (Week 8 Peer Testing)</h2>
       <p>
-        <strong>Prompt 1:</strong> “Does the ASCII-only design feel intuitive to
-        navigate?”<br />
-        <strong>Feedback:</strong> Some peers found it nostalgic but noted that
-        clickable ASCII buttons can feel confusing without hover states.<br />
-        <strong>Response:</strong> I plan to add subtle color changes (still
-        ASCII, but styled) for active states and hover feedback.
-      </p>
-
-      <p>
-        <strong>Prompt 2:</strong> “How do the time-of-day moods affect your
-        experience?”<br />
-        <strong>Feedback:</strong> The adaptive playback effects were well
-        received, but some peers suggested exaggerating the EQ changes for
-        stronger feedback.<br />
-        <strong>Response:</strong> I will tune the filters more dramatically so
-        that “Midnight Calm” feels noticeably different from “Sunrise Energy.”
+        After receiving the feedback from Wednesday's testing session, the
+        general consensus was that users liked the design of the prototype but
+        had some problems with the limited interactions and minimal visual
+        elements. From this feedback, I plan to add more animations,
+        interactions and visual elements to add more depth to the prototype.
+        Some users also mentioned problems with the audio ( not playing, delayed
+        start ), and also with the volume bar. I plan on to edit the audio so
+        that it can flow better and also add more hints for the buttons used for
+        interactions, to reduce confusion. The main feedback was to add more
+        depth to the protoype, and to refine the interactions to make it more
+        user friendly without losing the feel of the retro ASCII theme. I will
+        implement these changes for the next assignment to create a more
+        finished product and I'm pretty proud of what I created.
       </p>
     </section>
   </body>

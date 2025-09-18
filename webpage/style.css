@@ -55,6 +55,7 @@ img {
   margin-right: auto;
   max-width: 50%;
   height: auto;
+  padding: 1rem;
 }
 
 #figure2 {
@@ -71,39 +72,37 @@ img {
   flex: 1;
   min-width: 250px;
 }
-footer {
-  background: #222;
-  color: #888;
+
+#flow-diagramfig {
+  font-size: 0.9rem;
+  color: #aaa;
   text-align: center;
-  padding: 1rem;
-  font-size: 0.8rem;
-  margin-top: 2rem;
+  margin-top: 0.5rem;
 }
 
-.tech-block {
+#code1fig {
+  font-size: 0.9rem;
+  color: #aaa;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.date-row {
   display: flex;
   gap: 2rem;
-  margin-bottom: 2rem;
   align-items: flex-start;
 }
 
-.tech-text {
-  flex: 1;
-  min-width: 250px;
+.date-text {
+  flex: 2;
 }
 
-.tech-code {
+.date-img {
   flex: 1;
-  background: #1a1a1a;
-  border: 1px solid #444;
-  padding: 1rem;
-  border-radius: 6px;
-  overflow-x: auto;
+  text-align: center;
 }
 
-.tech-code pre {
-  margin: 0;
-  color: rgb(255, 255, 255);
-  font-family: "Courier New", monospace;
-  font-size: 0.9rem;
+.date-img img {
+  max-width: 100%;
+  height: auto;
 }
